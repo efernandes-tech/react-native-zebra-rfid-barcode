@@ -95,12 +95,13 @@ public class RFIDReaderInterface implements RfidEventsListener {
   @Override
   public void eventReadNotify(RfidReadEvents rfidReadEvents) {
     // Each access belong to a tag.
-    // Therefore, as we are performing an access sequence on 3 Memory Banks, each tag could be reported 3 times
+    // Therefore, as we are performing an access sequence on 3 Memory Banks, each
+    // tag could be reported 3 times
     // Each tag data represents a memory bank
-    TagDataArray readTags = reader.Actions.getReadTagsEx(100);
+    TagData[] readTags = reader.Actions.getReadTags(100);
     if (readTags != null) {
       ArrayList<String> listTags = new ArrayList<>();
-      for (TagData myTag : readTags.getTags()) {
+      for (TagData myTag : readTags) {
         String tagID = myTag.getTagID();
 
         if (tagID != null) {
@@ -111,11 +112,32 @@ public class RFIDReaderInterface implements RfidEventsListener {
     }
   }
 
+  // @Override
+  // public void eventReadNotify(RfidReadEvents rfidReadEvents) {
+  // // Each access belong to a tag.
+  // // Therefore, as we are performing an access sequence on 3 Memory Banks, each
+  // // tag could be reported 3 times
+  // // Each tag data represents a memory bank
+  // TagDataArray readTags = reader.Actions.getReadTagsEx(100);
+  // if (readTags != null) {
+  // ArrayList<String> listTags = new ArrayList<>();
+  // for (TagData myTag : readTags.getTags()) {
+  // String tagID = myTag.getTagID();
+
+  // if (tagID != null) {
+  // listTags.add(tagID);
+  // }
+  // }
+  // listener.onRFIDRead(listTags);
+  // }
+  // }
+
   @SuppressLint("StaticFieldLeak")
   public void eventStatusNotify(RfidStatusEvents rfidStatusEvents) {
     Log.d(TAG, "Status Notification: " + rfidStatusEvents.StatusEventData.getStatusEventType());
     if (rfidStatusEvents.StatusEventData.getStatusEventType() == STATUS_EVENT_TYPE.HANDHELD_TRIGGER_EVENT) {
-      if (rfidStatusEvents.StatusEventData.HandheldTriggerEventData.getHandheldEvent() == HANDHELD_TRIGGER_EVENT_TYPE.HANDHELD_TRIGGER_PRESSED) {
+      if (rfidStatusEvents.StatusEventData.HandheldTriggerEventData
+          .getHandheldEvent() == HANDHELD_TRIGGER_EVENT_TYPE.HANDHELD_TRIGGER_PRESSED) {
         new AsyncTask<Void, Void, Void>() {
           @Override
           protected Void doInBackground(Void... voids) {
@@ -128,7 +150,8 @@ public class RFIDReaderInterface implements RfidEventsListener {
           }
         }.execute();
       }
-      if (rfidStatusEvents.StatusEventData.HandheldTriggerEventData.getHandheldEvent() == HANDHELD_TRIGGER_EVENT_TYPE.HANDHELD_TRIGGER_RELEASED) {
+      if (rfidStatusEvents.StatusEventData.HandheldTriggerEventData
+          .getHandheldEvent() == HANDHELD_TRIGGER_EVENT_TYPE.HANDHELD_TRIGGER_RELEASED) {
         new AsyncTask<Void, Void, Void>() {
           @Override
           protected Void doInBackground(Void... voids) {
@@ -145,10 +168,8 @@ public class RFIDReaderInterface implements RfidEventsListener {
   }
 
   private String getMemBankData(String memoryBankData, ACCESS_OPERATION_STATUS opStatus) {
-    return (opStatus != ACCESS_OPERATION_STATUS.ACCESS_SUCCESS) ?
-      opStatus.toString()
-      :
-      memoryBankData;
+    return (opStatus != ACCESS_OPERATION_STATUS.ACCESS_SUCCESS) ? opStatus.toString()
+        : memoryBankData;
   }
 
   public void onDestroy() {

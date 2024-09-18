@@ -23,7 +23,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 @ReactModule(name = ZebraRfidBarcodeModule.NAME)
-public class ZebraRfidBarcodeModule extends ReactContextBaseJavaModule implements IRFIDReaderListener, IBarcodeScannedListener {
+public class ZebraRfidBarcodeModule extends ReactContextBaseJavaModule
+    implements IRFIDReaderListener, IBarcodeScannedListener {
   public static final String NAME = "ZebraRfidBarcode";
   private RFIDReaderInterface rfidInterface;
   private BarcodeScannerInterface scannerInterface;
